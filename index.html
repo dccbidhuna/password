@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Password Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            margin: 0;
+        }
+
+        header {
+            background: #6200ea;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 20px;
+        }
+
+        nav {
+            background: #bbdefb;
+            color: #333;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+        }
+
+        nav a {
+            color: #333;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            text-align: center;
+        }
+
+        .output {
+            background: #e0e0e0;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-size: 18px;
+            word-wrap: break-word;
+            text-align: center;
+        }
+
+        .controls {
+            margin: 15px 0;
+        }
+
+        .controls label {
+            display: block;
+            margin: 10px 0;
+        }
+
+        .controls input[type="range"] {
+            width: 100%;
+        }
+
+        button {
+            background: #03dac6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
+            display: block;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        button:hover {
+            background: #018786;
+        }
+
+        button:disabled {
+            background: #888;
+            cursor: not-allowed;
+        }
+
+        .adsense {
+            margin: 20px 0;
+            text-align: center;
+            background: #f0f0f0;
+            border: 1px dashed #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        @media (max-width: 600px) {
+            nav {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .container {
+                width: 90%;
+            }
+
+            button {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>Advanced Password Generator</header>
+    <nav>
+        <a href="#">Home</a>
+        <a href="https://bottle-phi.vercel.app/">Game</a>
+        <a href="#">Contact</a>
+    </nav>
+    <div class="container">
+        <h1>Password Generator</h1>
+        <div class="output" id="passwordOutput">Click Generate</div>
+        <div class="controls">
+            <label>
+                Length: <span id="lengthValue">12</span>
+                <input type="range" id="length" min="6" max="32" value="12">
+            </label>
+            <label>
+                <input type="checkbox" id="includeUppercase" checked> Include Uppercase Letters
+            </label>
+            <label>
+                <input type="checkbox" id="includeNumbers" checked> Include Numbers
+            </label>
+            <label>
+                <input type="checkbox" id="includeSymbols" checked> Include Symbols
+            </label>
+        </div>
+        <button id="generateButton">Generate Password</button>
+        <button id="copyButton">Copy to Clipboard</button>
+        <div class="adsense">
+            <!-- Google AdSense Placeholder -->
+            Advertise Here
+        </div>
+    </div>
+
+    <script>
+        const passwordOutput = document.getElementById('passwordOutput');
+        const lengthSlider = document.getElementById('length');
+        const lengthValue = document.getElementById('lengthValue');
+        const includeUppercase = document.getElementById('includeUppercase');
+        const includeNumbers = document.getElementById('includeNumbers');
+        const includeSymbols = document.getElementById('includeSymbols');
+        const generateButton = document.getElementById('generateButton');
+        const copyButton = document.getElementById('copyButton');
+
+        lengthSlider.addEventListener('input', () => {
+            lengthValue.textContent = lengthSlider.value;
+        });
+
+        function generatePassword(length, uppercase, numbers, symbols) {
+            const lowerCaseChars = 'abcdefghijklmnopqrstuvwxyz';
+            const upperCaseChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const numberChars = '0123456789';
+            const symbolChars = '!@#$%^&*()_+[]{}|;:,.<>?/';
+
+            let charPool = lowerCaseChars;
+            if (uppercase) charPool += upperCaseChars;
+            if (numbers) charPool += numberChars;
+            if (symbols) charPool += symbolChars;
+
+            let password = '';
+            for (let i = 0; i < length; i++) {
+                const randomIndex = Math.floor(Math.random() * charPool.length);
+                password += charPool[randomIndex];
+            }
+
+            return password;
+        }
+
+        generateButton.addEventListener('click', () => {
+            const length = parseInt(lengthSlider.value);
+            const uppercase = includeUppercase.checked;
+            const numbers = includeNumbers.checked;
+            const symbols = includeSymbols.checked;
+
+            if (!uppercase && !numbers && !symbols) {
+                alert('Please select at least one character type.');
+                return;
+            }
+
+            const password = generatePassword(length, uppercase, numbers, symbols);
+            passwordOutput.textContent = password;
+        });
+
+        copyButton.addEventListener('click', () => {
+            navigator.clipboard.writeText(passwordOutput.textContent)
+                .then(() => alert('Password copied to clipboard!'))
+                .catch(() => alert('Failed to copy password.'));
+        });
+    </script>
+</body>
+</html>
